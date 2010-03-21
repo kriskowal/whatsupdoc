@@ -1,0 +1,8 @@
+{
+    "name": "whatsupdoc",
+    "dependencies": [
+        "narwhal-lib",
+        "markdown",
+        "json-template"
+    ]
+}
