@@ -1,0 +1,2 @@
+#!/usr/bin/env js
+require("os").exit(require("whatsupdoc/main").main(require("system")));
