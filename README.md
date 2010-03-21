@@ -6,6 +6,14 @@ A CommonJS package that provides a plugable architecture for parsing and
 formatting inline CommonJS JavaScript module inline reference documentation,
 parsing a notation similar to `jsdoc`.
 
+Status: in progress.
+
+Demo
+----
+
+Run `js lib/whatsupdoc.js` and it will print a JSON data structure representing
+its own documentation.
+
 
 MIT License
 -----------
