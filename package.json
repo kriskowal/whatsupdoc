@@ -1,7 +1,9 @@
 {
     "name": "whatsupdoc",
+    "keywords": ["docs", "jsdoc", "parser"],
     "dependencies": [
         "narwhal-lib",
+        "thatsallfolks",
         "markdown"
     ]
 }

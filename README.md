@@ -6,7 +6,7 @@ A CommonJS package that provides a plugable architecture for parsing and
 formatting inline CommonJS JavaScript module inline reference documentation,
 parsing a notation similar to `jsdoc`.
 
-Status: in progress.
+Status: under construction.
 
 Demo
 ----

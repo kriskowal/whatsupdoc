@@ -1,0 +1,27 @@
+{{ extends "whatsupdoc/style.html" }}
+{% block body %}
+<ul>
+{% for children %}
+    <li>
+
+        <p><strong><code>{{name}}</code></strong></p>
+
+        {{doc|safe}}
+
+        <p><em>accepts:</em></p>
+        <ul>
+        {% for params %}
+            <li>{{.}}</li>
+        {% end %}
+        </ul>
+
+        <p><em>returns:</em> {{returns}}</p>
+
+        {% for children %}
+            {{children|safe}}
+        {% end %}
+
+    </li>
+{% end %}
+</dl>
+{% end %}
