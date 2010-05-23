@@ -1,0 +1,14 @@
+{{ extends "thatsallfolks/layout.html" }}
+{% block head %}
+    {{ block.super }}
+    <link href="style.css" rel="stylesheet" type="text/css">
+{% end block head %}
+{% block navigation %}
+    <div id="logo-container"><div id="logo"></div></div>
+    <ul>
+        <li><a href="packages.html">packages</a></li>
+        <li><a href="index.html">index</a></li>
+        <li><em>soon:</em> package</li>
+        <li><em>soon:</em> modules</li>
+    </ul>
+{% end block %}

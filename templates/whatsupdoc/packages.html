@@ -1,6 +1,6 @@
 {{ extends "whatsupdoc/base.html" }}
-{% block body %}
-    <h1>Packages</h1>
+{% block title %} Packages {% end %}
+{% block content %}
     <ul>
     {% for child in children %}
         <li><a href="{{child.href}}.html"><tt>{{child.name}}</tt></a></li>

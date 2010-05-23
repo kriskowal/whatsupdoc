@@ -1,27 +1,149 @@
-{{ extends "whatsupdoc/style.html" }}
-{% block body %}
-<ul>
-{% for children %}
-    <li>
+{{ extends "whatsupdoc/base.html" }}
+{% block header %}
 
-        <p><strong><code>{{name}}</code></strong></p>
-
-        {{doc|safe}}
-
-        <p><em>accepts:</em></p>
-        <ul>
-        {% for params %}
-            <li>{{.}}</li>
+    <h1>
+        <tt>{{name|html}}</tt>
+        {% if type %}<em>{{type|html}}</em>{% end %}
+        {% if jsType %}<tt>{{jsType|html}}</tt>{% end %}
+        {% if deprecated %}
+            <em class="whatsupdoc-deprecated">deprecated</em>
+        {% end if %}
+        {% if sourceLinks %}
+            <a class="whatsupdoc-source-link" href="file:{{fileName|attribute}}#{{lineNo}}"><em>source</em></a>
         {% end %}
-        </ul>
+    </h1>
 
-        <p><em>returns:</em> {{returns}}</p>
-
-        {% for children %}
-            {{children|safe}}
-        {% end %}
-
-    </li>
 {% end %}
-</dl>
+{% block content %}
+
+    {% if doc %}
+    {{doc|markdown}}
+    {% end %}
+
+    <!-- TODO params or throws or returns -->
+    {% if params %}
+    <table class="form whatsupdoc-parameters">
+        {% for param in params %}
+        <tr>
+            <th class="A">{% if param.variadic %}&hellip;{% end %}<tt>{{param.name|html}}</tt></th>
+            <td class="B">{% if param.type %}<tt>{{param.type|html}}</tt>{% end if %}</th>
+            {% if param.doc %}
+            <td class="C">{{param.doc|markdown}}</td>
+            {% end %}
+        </tr>
+        {% end for params %}
+        {% if returns %}
+        <tr>
+            <th class="A"><em>returns</em></th>
+            <td class="B"><tt>{{returns.type|html}}</tt></td>
+            <td class="C">{{returns.doc|markdown}}</td>
+        </tr> 
+        {% end returns %}
+        {% for throws in throws %}
+        <tr>
+            <th class="A"><em>throws</em></th>
+            <td class="B">{% if throws.type %}<tt>{{throws.type|html}}</tt>{% end if %}</th>
+            {% if throws.doc %}
+            <td class="C">{{throws.doc|markdown}}</td>
+            {% end %}
+        </tr>
+        {% end for throws %}
+    </table>
+    {% end if params %}
+
+    {% for see in see %}
+    <p><em>See:</em> {{see|markdown}}</p>
+    {% end for %}
+
+    {% if showErrors %}
+    {% if errors %}
+    <p>The following errors were encountered in the source code that generated this documentation:</p>
+    {% for error in errors %}
+    <p class="error"><strong>{{error}}</strong></p>
+    {% end for %}
+    {% end if errors %}
+    {% end if %}
+
+    {% if children %}
+    <ul>
+    {% for child in children %}
+        <li><a href="#{{child.name|attribute}}"><tt>{{child.name|html}}</tt></a></li>
+    {% end %}
+    </ul>
+    {% end if %}
+
+    {% for object in children %}
+    <a name="{{object.name|attribute}}"></a>
+    <h2>
+        <a href="{{object.href|attribute}}.html"><tt>{{object.name|html}}</tt></a>
+        {% if object.deprecated %}
+            <em class="whatsupdoc-deprecated">deprecated</em>
+        {% end if %}
+        {% if sourceLinks %}
+            <a class="whatsupdoc-source-link" href="file:{{object.fileName}}#{{object.lineNo}}"><em>source</em></a>
+        {% end %}
+    </h2>
+
+    {{object.doc|markdown}}
+
+
+    <table class="form whatsupdoc-parameters">
+        {% for param in object.params %}
+        <tr>
+            <th class="A">{% if param.variadic %}&hellip;{% end %}<tt>{{param.name|html}}</tt></th>
+            <td class="B">{% if param.type %}<tt>{{param.type|html}}</tt>{% end if %}</th>
+            {% if param.doc %}
+            <td class="C">{{param.doc|markdown}}</td>
+            {% end %}
+        </tr>
+        {% end for params %}
+        {% if object.returns %}
+        <tr>
+            <th class="A"><em>returns</em></th>
+            <td class="B"><tt>{{object.returns.type|html}}</tt></td>
+            <td class="C">{{object.returns.doc|markdown}}</td>
+        </tr> 
+        {% end returns %}
+        {% for throws in object.throws %}
+        <tr>
+            <th class="A"><em>throws</em></th>
+            <td class="B">{% if throws.type %}<tt>{{throws.type|html}}</tt>{% end if %}</th>
+            {% if throws.doc %}
+            <td class="C">{{throws.doc|markdown}}</td>
+            {% end %}
+        </tr>
+        {% end for throwss %}
+    </table>
+
+    {% for see in object.see %}
+    <p><em>See:</em> {{see|markdown}}</p>
+    {% end for %}
+
+    {% if showErrors %}
+    {% if errors %}
+    <p>The following errors were encountered in the source code that generated this documentation:</p>
+    {% for error in object.errors %}
+    <p class="error"><strong>{{error}}</strong></p>
+    {% end for errors %}
+    {% end if errors %}
+    {% end if showErrors %}
+
+    {% if object.children %}
+    <p>Properties:</p>
+    <table class="form">
+    {% for child in object.children %}
+    <tr>
+        <th><a href="{{child.href|attribute}}.html"><tt>{{child.name|html}}</tt></a></th> 
+        <td>{{child.doc|markdown}}</td>
+    </tr>
+    {% end for object.children %}
+    {% end if object.children %}
+    </table>
+    {% end for children %}
+
+{% end %}
+{% block extra %}
+
+    <p><a href="{{href|attribute}}.txt">JSON Format</a></p>
+
 {% end %}
