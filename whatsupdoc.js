@@ -89,13 +89,15 @@ exports.comments = function (text, fileName, lineNo) {
             var prefix = text.slice(0, nextBlock);
             prefix.replace(/\n/g, function () {
                 lineNo++;
+                return "\n";
             });
             if (nodes.length)
                 nodes[nodes.length - 1].code += prefix
             var prevLf = prefix.lastIndexOf("\n");
             var prefixLength;
             if (prevLf < 0) {
-                prefix = "";
+                prefix = text.slice(0, nextBlock);
+                text = text.slice(nextBlock);
             } else {
                 prefix = prefix.slice(prevLf + 1);
                 text = text.slice(nextBlock);
@@ -291,7 +293,7 @@ exports.tree = function (nodes, id) {
  * @returns {String | Undefined} a name or undefined if no
  * name can be found.
  */
-var guessRe = /\.(\w+)\s*=|["']([^'"]+)["']\s*:/;
+var guessRe = /(\w+)\s*=|["']([^'"]+)["']\s*:/;
 exports.guessName = function (code) {
     var match = guessRe.exec(code);
     if (match)

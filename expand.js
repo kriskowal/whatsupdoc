@@ -24,7 +24,7 @@ exports.expand = function (str, tabLength) {
             charsAddedThisLine += tabOffset;
             output.push(
                 str.slice(lastLastIndex, match.index) +
-                exports.mul(" ", tabOffset + 1)
+                spaces(tabOffset + 1)
             );
         } else if (match[0] === "\n") {
             output.push(str.slice(lastLastIndex, tabLf.lastIndex));
@@ -34,5 +34,9 @@ exports.expand = function (str, tabLength) {
         lastLastIndex = tabLf.lastIndex;
     }
     return output.join("") + str.slice(lastLastIndex);
+};
+
+var spaces = function (n) {
+    return Array(n + 1).join(" ");
 };
 
