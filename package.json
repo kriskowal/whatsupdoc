@@ -9,5 +9,8 @@
     "main": "whatsupdoc.js",
     "bin": {
         "wudoc": "whatsupdoc.js"
+    },
+    "devDependencies": {
+        "test": "0.4.3"
     }
 }
