@@ -1,6 +1,6 @@
 {
     "name": ".",
-    "lineNo": 2,
+    "lineNo": 3,
     "params": [],
     "errors": [
         "Did not recognize \"license\" tag."
@@ -19,7 +19,7 @@
     "children": [
         {
             "name": "parseModule",
-            "lineNo": 18,
+            "lineNo": 17,
             "params": [
                 {
                     "name": "text",
@@ -43,7 +43,7 @@
         },
         {
             "name": "comments",
-            "lineNo": 38,
+            "lineNo": 37,
             "params": [
                 {
                     "name": "text",
@@ -72,7 +72,7 @@
         },
         {
             "name": "docs",
-            "lineNo": 128,
+            "lineNo": 127,
             "params": [
                 {
                     "name": "nodes",
@@ -91,7 +91,7 @@
         },
         {
             "name": "guessMarkup",
-            "lineNo": 192,
+            "lineNo": 191,
             "params": [],
             "errors": [],
             "throws": [],
@@ -99,17 +99,8 @@
             "doc": "Scans an array of comment descriptors as provided by the\n`comments` method and returns a markup language module\nname.  The default is `undefined`."
         },
         {
-            "name": "checkWhatsupdoc",
-            "lineNo": 207,
-            "params": [],
-            "errors": [],
-            "throws": [],
-            "see": [],
-            "doc": "Scans an array of comment descriptors as provided by the\n{@link comments} method and returns whether there is a\n`whatsupdoc` comment/annotation indicating that the\nmodule opts in for this style of documentation parsing."
-        },
-        {
             "name": "parseDocs",
-            "lineNo": 219,
+            "lineNo": 206,
             "params": [
                 {
                     "name": "nodes",
@@ -132,7 +123,7 @@
         },
         {
             "name": "tree",
-            "lineNo": 256,
+            "lineNo": 243,
             "params": [
                 {
                     "name": "nodes",
@@ -155,7 +146,7 @@
         },
         {
             "name": "guessName",
-            "lineNo": 301,
+            "lineNo": 288,
             "params": [
                 {
                     "name": "code",
@@ -174,7 +165,7 @@
         },
         {
             "name": "parseDoc",
-            "lineNo": 314,
+            "lineNo": 301,
             "params": [
                 {
                     "name": "text",
@@ -202,7 +193,7 @@
         },
         {
             "name": "tagParsers",
-            "lineNo": 365,
+            "lineNo": 352,
             "params": [],
             "errors": [],
             "throws": [],
@@ -211,7 +202,7 @@
             "children": [
                 {
                     "name": "param",
-                    "lineNo": 374,
+                    "lineNo": 361,
                     "params": [
                         {
                             "name": "text",
@@ -229,7 +220,7 @@
                 },
                 {
                     "name": "params",
-                    "lineNo": 402,
+                    "lineNo": 389,
                     "params": [
                         {
                             "name": "text",
@@ -247,7 +238,7 @@
                 },
                 {
                     "name": "returns",
-                    "lineNo": 430,
+                    "lineNo": 417,
                     "params": [
                         {
                             "name": "text",
@@ -265,7 +256,7 @@
                 },
                 {
                     "name": "return",
-                    "lineNo": 451,
+                    "lineNo": 438,
                     "params": [
                         {
                             "name": "text",
@@ -285,7 +276,7 @@
                 },
                 {
                     "name": "name",
-                    "lineNo": 459,
+                    "lineNo": 446,
                     "params": [
                         {
                             "name": "text",
@@ -303,7 +294,7 @@
                 },
                 {
                     "name": "author",
-                    "lineNo": 470,
+                    "lineNo": 457,
                     "params": [
                         {
                             "name": "text",
@@ -321,7 +312,7 @@
                 },
                 {
                     "name": "contributor",
-                    "lineNo": 488,
+                    "lineNo": 475,
                     "params": [
                         {
                             "name": "text",
@@ -341,7 +332,7 @@
                 },
                 {
                     "name": "constructor",
-                    "lineNo": 500,
+                    "lineNo": 487,
                     "params": [
                         {
                             "name": "text",
@@ -359,7 +350,7 @@
                 },
                 {
                     "name": "deprecated",
-                    "lineNo": 512,
+                    "lineNo": 499,
                     "params": [
                         {
                             "name": "text",
@@ -377,7 +368,7 @@
                 },
                 {
                     "name": "module",
-                    "lineNo": 524,
+                    "lineNo": 511,
                     "params": [
                         {
                             "name": "text",
@@ -395,7 +386,7 @@
                 },
                 {
                     "name": "fileoverview",
-                    "lineNo": 534,
+                    "lineNo": 521,
                     "params": [
                         {
                             "name": "text",
@@ -415,7 +406,7 @@
                 },
                 {
                     "name": "type",
-                    "lineNo": 541,
+                    "lineNo": 528,
                     "params": [],
                     "errors": [],
                     "throws": [],

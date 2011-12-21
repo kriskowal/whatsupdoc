@@ -6,8 +6,8 @@
         "jsdoc",
         "parser"
     ],
-    "dependencies": {
-        "n-util": "0.0.1",
-    },
-    "main": "whatsupdoc"
+    "main": "whatsupdoc.js",
+    "bin": {
+        "wudoc": "whatsupdoc.js"
+    }
 }

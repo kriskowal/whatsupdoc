@@ -1,12 +1,7 @@
 
 /**
  * Provides basic parsing utilities.
- * @module
  */
-
-/*whatsupdoc*/
-
-var UTIL = require("n-util");
 
 /**
  * parses a template and returns its syntax tree
@@ -79,7 +74,7 @@ exports.tree = function (nodes, fileName) {
             if (node.type == "{") {
                 stack[stack.length - 1].children.push({
                     "type": "inline",
-                    "content": UTIL.trim(node.content),
+                    "content": node.content.trim(),
                     "fileName": fileName,
                     "lineNo": node.lineNo,
                     "columnNo": node.columnNo
@@ -99,7 +94,7 @@ exports.tree = function (nodes, fileName) {
             } else {
                 var node = {
                     "type": "block",
-                    "content": UTIL.trim(node.content),
+                    "content": node.content.trim(),
                     "fileName": fileName,
                     "lineNo": node.lineNo,
                     "columnNo": node.columnNo,
@@ -129,7 +124,7 @@ exports.parseCurly = function (text, node) {
     var nextOpen = text.indexOf("{");
     var nextClose = text.indexOf("}");
     if (nextClose < 0) {
-        node.errors.push("Unmatched `{` in " + UTIL.enquote("{" + text));
+        node.errors.push("Unmatched `{` in " + JSON.stringify("{" + text));
         return ["", ""];
     } else if (nextOpen < 0) {
         return [text.slice(0, nextClose), text.slice(nextClose + 1)];
@@ -145,7 +140,7 @@ exports.parseCurlyScan = function (text, node) {
     var nextOpen = text.indexOf("{");
     var nextClose = text.indexOf("}");
     if (nextClose < 0) {
-        node.errors.push("Unmatched `{` in " + UTIL.enquote("{" + text));
+        node.errors.push("Unmatched `{` in " + JSON.stringify("{" + text));
         return ["", ""];
     } else if (nextOpen < 0 || nextClose < nextOpen) {
         // assert nextClose > 0

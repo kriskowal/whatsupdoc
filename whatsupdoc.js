@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 
 /**
  * An API for parsing inline JavaScript documentation.
@@ -7,13 +8,11 @@
  * @module
  */
 
-/*whatsupdoc*/
-
 // TODO {@link support}
 
-var UTIL = require("n-util");
 var PARSE = require("./parse");
 var Author = require("./author").Author;
+var expand = require("./expand").expand;
 
 /**
  * Creates a documentation tree for a module.
@@ -26,7 +25,7 @@ var Author = require("./author").Author;
  * lineNo}`
  */
 exports.parseModule = function (text, id) {
-    text = UTIL.expand(text);
+    text = expand(text);
     var comments = exports.comments(text);
     var markup = exports.guessMarkup(comments);
     var docs = exports.docs(comments);
@@ -154,8 +153,8 @@ exports.docs = function (nodes) {
         var firstLine = lines.shift();
         if (!/^\*+/.test(firstLine))
             return;
-        var spacePrefix = UTIL.mul(" ", node.prefix.length + 4);
-        var starPrefix = UTIL.mul(" ", node.prefix.length) + " \\* ?";
+        var spacePrefix = spaces(node.prefix.length + 4);
+        var starPrefix = spaces(node.prefix.length) + " \\* ?";
         var expression = new RegExp(
             "^(" +
                 spacePrefix + "|" + 
@@ -163,7 +162,7 @@ exports.docs = function (nodes) {
             ")" + "(.*)$"
         );
         lines = lines.map(function (line) {
-            if (!UTIL.trim(line).length)
+            if (!line.trim().length)
                 return "";
             if (!expression.test(line))
                 return line; // XXX throw useful error
@@ -171,12 +170,12 @@ exports.docs = function (nodes) {
         });
         while (
             lines.length &&
-            !UTIL.trim(lines[lines.length - 1]).length
+            !lines[lines.length - 1].trim().length
         )
             lines.pop();
         var match = /^(\*+) ?(.*)$/.exec(firstLine)
         var firstLine = match[2];
-        if (UTIL.trim(firstLine))
+        if (firstLine.trim())
             lines.unshift(firstLine);
         docs.push({
             "level": match[1].length - 1,
@@ -202,18 +201,6 @@ exports.guessMarkup = function (comments) {
             markup = match[1];
     });
     return markup;
-};
-
-/**
- * Scans an array of comment descriptors as provided by the
- * {@link comments} method and returns whether there is a
- * `whatsupdoc` comment/annotation indicating that the
- * module opts in for this style of documentation parsing.
- */
-exports.checkWhatsupdoc = function (comments) {
-    return comments.some(function (node) {
-        return /^whatsupdoc\s*$/.test(node.comment);
-    });
 };
 
 /**
@@ -344,7 +331,7 @@ exports.parseDoc = function (text, node, tagParsers) {
                 var text = (match[2] || "").split(/\n/g).join(" ");
                 if (!tagParsers[tag]) {
                     node.errors.push("Did not recognize " +
-                        UTIL.enquote(tag) + " tag.");
+                        JSON.stringify(tag) + " tag.");
                 } else {
                     tagParsers[tag](text, node);
                 }
@@ -386,7 +373,7 @@ tagParsers.param = function (text, node) {
     }
     var match = /^(\w+)(?:\s+([\S\s]*))?$/.exec(text);
     if (!match) {
-        node.errors.push("Could not recognize `@param` " + UTIL.enquote(text));
+        node.errors.push("Could not recognize `@param` " + JSON.stringify(text));
         return;
     }
     var name = match[1];
@@ -414,7 +401,7 @@ tagParsers.params = function (text, node) {
     }
     var match = /^(\w+)(?:\s+([\S\s]*))?$/.exec(text);
     if (!match) {
-        node.errors.push("Could not recognize `@param` " + UTIL.enquote(text));
+        node.errors.push("Could not recognize `@param` " + JSON.stringify(text));
         return;
     }
     var name = match[1];
@@ -464,7 +451,7 @@ tagParsers["return"] = tagParsers.returns;
  * @param {{errors Array}} node
  */
 tagParsers.name = function (text, node) {
-    node.name = UTIL.trim(text);
+    node.name = text.trim();
 };
 
 /***
@@ -504,7 +491,7 @@ tagParsers.contributor = function (text, node) {
  * @param {{errors Array}} node
  */
 tagParsers.constructor = function (text, node) {
-    if (UTIL.trim(text).length)
+    if (text.trim().length)
         node.errors.push("`@constructor` tag had superfluous text");
     node.constructor = true;
 };
@@ -516,7 +503,7 @@ tagParsers.constructor = function (text, node) {
  * @param {{errors Array}} node
  */
 tagParsers.deprecated = function (text, node) {
-    if (UTIL.trim(text).length)
+    if (text.trim().length)
         node.errors.push("`@deprecated` tag had superfluous text");
     node.deprecated = true;
 };
@@ -526,7 +513,7 @@ tagParsers.deprecated = function (text, node) {
  * @param {{errors Array}} node
  */
 tagParsers.module = function (text, node) {
-    if (UTIL.trim(text).length)
+    if (text.trim().length)
         node.errors.push("`@module` tag had superfluous text");
     node.module = true;
 };
@@ -581,9 +568,16 @@ tagParsers['throws'] = function (text, node) {
    @set
 */
 
+var spaces = function (n) {
+    return Array(n + 1).join(" ");
+};
+
 if (require.main == module) {
-    var FS = require("fs");
-    var text = FS.readFileSync(module.path || module.filename);
+    // node side only, not in browser. use parens to prevent
+    // static dependency.
+    var FS = (require)("fs");
+    var fileName = process.argv[2] || module.path || module.filename
+    var text = FS.readFileSync(fileName);
     var tree = exports.parseModule(text, module.id);
     console.log(JSON.stringify(tree, null, 4));
 }

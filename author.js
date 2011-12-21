@@ -1,12 +1,10 @@
 
-var UTIL = require("n-util");
-
 exports.Author = function (author) {
     if (!(this instanceof exports.Author))
         return new exports.Author(author);
     if (typeof author == "string") {
         var match = author.match(exports.Author.regexp);
-        this.name = UTIL.trim(match[1]);
+        this.name = match[1].trim();
         this.url = match[2];
         this.email = match[3];
     } else {
