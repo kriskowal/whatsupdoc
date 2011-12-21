@@ -1,29 +1,13 @@
 {
     "name": "whatsupdoc",
-    "keywords": ["docs", "jsdoc", "parser"],
-    "version": "0.0.1",
-    "contributors": [
-        {
-            "name": "Kris Kowal",
-            "web": "http://askawizard.blogspot.com",
-            "email": "kris@cixar.com"
-        }
+    "version": "0.0.2",
+    "keywords": [
+        "docs",
+        "jsdoc",
+        "parser"
     ],
     "dependencies": {
-        "narwhal-lib": "0.0.2",
-        "thatsallfolks": "0.0.1",
-        "markdown": "0.0.0"
+        "n-util": "0.0.1",
     },
-    "directories": {
-        "thatsallfolks": "templates"
-    },
-    "overlay": {
-        "npm": {
-            "dependencies": {
-                "narwhal-lib": ">=0.0.2",
-                "thatsallfolks": ">=0.0.0",
-                "markdown": ">=0.0.0"
-            }
-        }
-    }
+    "main": "whatsupdoc"
 }

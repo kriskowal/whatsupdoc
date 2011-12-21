@@ -8,16 +8,6 @@ parsing a notation similar to `jsdoc`.
 
 Status: under construction.
 
-Demo
-----
-
-Run `js lib/whatsupdoc.js` and it will print a JSON data structure representing
-its own documentation.
-
-Run `wudoc -a all` to generate an `api` directory containing documentation
-for all installed packages.
-
-
 MIT License
 -----------
 

@@ -11,73 +11,9 @@
 
 // TODO {@link support}
 
-var UTIL = require("narwhal/util");
-var PACKAGES = require("narwhal/packages");
-var TERM = require("narwhal/term");
-var PARSE = require("thatsallfolks/parse");
-var stream = TERM.stream;
-
-/**
- * @param {Array * {id String, path Path, pkg String}} finds
- * a list of module descriptions including their `id`, a
- * `Path` object to their program file, and the name of the
- * package each came from.
- * @param {Boolean} force whether to parse a module that
- * does not have a `/*whatsupdoc` annotation.
- * @returns {{"type": "packages", "packages": Object,
- * "children": Array * ...}} the root of a package
- * documentation tree.
- */
-exports.parseModules = function (finds, force, verbose) {
-    var root = {
-        "type": "packages",
-        "index": {}
-    };
-    finds.forEach(function (find) {
-        var text = find.path.read({"charset": "UTF-8"});
-        text = UTIL.expand(text);
-        var comments = exports.comments(text, find.path);
-        if (!exports.checkWhatsupdoc(comments) && !force)
-            return;
-        if (verbose)
-            stream.print("\0green(" + find.id + "\0)");
-        var markup = exports.guessMarkup(comments);
-        if (markup !== "markdown")
-            throw new Error(find.path + " specifies non-markdown markup language, which is not yet supported by whatsupdoc.");
-        var docs = exports.docs(comments);
-        var nodes = exports.parseDocs(docs, markup);
-        var tree = exports.tree(nodes, find.id);
-        var info = PACKAGES.catalog[find.pkg] || {
-            "name": find.pkg
-        };
-        var pkg = UTIL.getset(root.index, find.pkg, {
-            "name": find.pkg,
-            "type": "package",
-            "markup": markup,
-            "doc": info.description,
-            "author": info.author,
-            "contributors": info.contributors,
-            "license": info.license,
-            "keywords": info.keywords,
-            "children": []
-        });
-        pkg.children.push(tree);
-    });
-
-    // construct an ordered list of children based on the
-    // topological order of the installed packages,
-    // extracted from the package index
-    root.children = PACKAGES.order.filter(function (pkg) {
-        return UTIL.has(root.index, pkg);
-    }).map(function (pkg) {
-        return root.index[pkg];
-    });
-
-    if (root.index["/"])
-        root.children.unshift(root.index["/"])
-
-    return root;
-};
+var UTIL = require("n-util");
+var PARSE = require("./parse");
+var Author = require("./author").Author;
 
 /**
  * Creates a documentation tree for a module.
@@ -256,10 +192,10 @@ exports.docs = function (nodes) {
 /**
  * Scans an array of comment descriptors as provided by the
  * `comments` method and returns a markup language module
- * name.  The default is `"markdown"`.
+ * name.  The default is `undefined`.
  */
 exports.guessMarkup = function (comments) {
-    var markup = "markdown";
+    var markup;
     comments.forEach(function (node) {
         var match = /^markup\s+(\S+)\s*$/.exec(node.comment);
         if (match)
@@ -546,7 +482,7 @@ tagParsers.name = function (text, node) {
  * @param {{errors Array}} node
  */
 tagParsers.author = function (text, node) {
-    node.author = new PACKAGES.Author(text);
+    node.author = new Author(text);
 };
 
 /***
@@ -558,7 +494,7 @@ tagParsers.author = function (text, node) {
  * @param {{errors Array}} node
  */
 tagParsers.contributor = function (text, node) {
-    node.contributors.push(new PACKAGES.Author(text));
+    node.contributors.push(new Author(text));
 };
 
 /***
@@ -646,9 +582,9 @@ tagParsers['throws'] = function (text, node) {
 */
 
 if (require.main == module) {
-    var FS = require("narwhal/fs");
-    var text = FS.path(module.path).read()
+    var FS = require("fs");
+    var text = FS.readFileSync(module.path || module.filename);
     var tree = exports.parseModule(text, module.id);
-    print(JSON.encode(tree, null, 4));
+    console.log(JSON.stringify(tree, null, 4));
 }
 
