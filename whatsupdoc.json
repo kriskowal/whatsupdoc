@@ -1,6 +1,7 @@
 {
     "name": ".",
     "lineNo": 3,
+    "lastLineNo": 9,
     "params": [],
     "errors": [
         "Did not recognize \"license\" tag."
@@ -15,11 +16,11 @@
     "module": true,
     "doc": "An API for parsing inline JavaScript documentation.",
     "type": "module",
-    "id": ".",
     "children": [
         {
             "name": "parseModule",
             "lineNo": 17,
+            "lastLineNo": 28,
             "params": [
                 {
                     "name": "text",
@@ -27,9 +28,14 @@
                     "doc": "the text of a JavaScript program"
                 },
                 {
-                    "name": "id",
+                    "name": "name",
                     "type": "String",
                     "doc": "optional module identifier"
+                },
+                {
+                    "name": "options",
+                    "type": "{tagParsers}",
+                    "doc": "provides optional hooks, presently just giving the ability to override the `tagParsers`."
                 }
             ],
             "errors": [],
@@ -43,7 +49,8 @@
         },
         {
             "name": "comments",
-            "lineNo": 37,
+            "lineNo": 41,
+            "lastLineNo": 58,
             "params": [
                 {
                     "name": "text",
@@ -72,7 +79,8 @@
         },
         {
             "name": "docs",
-            "lineNo": 127,
+            "lineNo": 135,
+            "lastLineNo": 155,
             "params": [
                 {
                     "name": "nodes",
@@ -91,7 +99,8 @@
         },
         {
             "name": "guessMarkup",
-            "lineNo": 191,
+            "lineNo": 200,
+            "lastLineNo": 204,
             "params": [],
             "errors": [],
             "throws": [],
@@ -100,7 +109,8 @@
         },
         {
             "name": "parseDocs",
-            "lineNo": 206,
+            "lineNo": 215,
+            "lastLineNo": 231,
             "params": [
                 {
                     "name": "nodes",
@@ -123,14 +133,15 @@
         },
         {
             "name": "tree",
-            "lineNo": 243,
+            "lineNo": 253,
+            "lastLineNo": 263,
             "params": [
                 {
                     "name": "nodes",
                     "type": "Array * {level, ...}"
                 },
                 {
-                    "name": "id",
+                    "name": "name",
                     "type": "String",
                     "doc": "optional module identifier"
                 }
@@ -139,14 +150,15 @@
             "throws": [],
             "see": [],
             "returns": {
-                "type": "{\"type\": \"module\", \"id\": id, \"children\": Array * ...}",
+                "type": "{\"type\": \"module\", \"name\": name, \"children\": Array of ...}",
                 "doc": ""
             },
             "doc": "takes a linear list of documentation nodes from a single\nmodule, such as those returned by `parseDocs`, and\nreturns the root of a tree of nodes, where the `level`\nnumbers are translated into `children` arrays."
         },
         {
-            "name": "guessName",
-            "lineNo": 288,
+            "name": "guessRe",
+            "lineNo": 298,
+            "lastLineNo": 303,
             "params": [
                 {
                     "name": "code",
@@ -165,7 +177,8 @@
         },
         {
             "name": "parseDoc",
-            "lineNo": 301,
+            "lineNo": 311,
+            "lastLineNo": 324,
             "params": [
                 {
                     "name": "text",
@@ -193,7 +206,8 @@
         },
         {
             "name": "tagParsers",
-            "lineNo": 352,
+            "lineNo": 362,
+            "lastLineNo": 368,
             "params": [],
             "errors": [],
             "throws": [],
@@ -202,7 +216,8 @@
             "children": [
                 {
                     "name": "param",
-                    "lineNo": 361,
+                    "lineNo": 371,
+                    "lastLineNo": 377,
                     "params": [
                         {
                             "name": "text",
@@ -220,7 +235,8 @@
                 },
                 {
                     "name": "params",
-                    "lineNo": 389,
+                    "lineNo": 399,
+                    "lastLineNo": 405,
                     "params": [
                         {
                             "name": "text",
@@ -238,7 +254,8 @@
                 },
                 {
                     "name": "returns",
-                    "lineNo": 417,
+                    "lineNo": 427,
+                    "lastLineNo": 433,
                     "params": [
                         {
                             "name": "text",
@@ -256,7 +273,8 @@
                 },
                 {
                     "name": "return",
-                    "lineNo": 438,
+                    "lineNo": 448,
+                    "lastLineNo": 453,
                     "params": [
                         {
                             "name": "text",
@@ -276,7 +294,8 @@
                 },
                 {
                     "name": "name",
-                    "lineNo": 446,
+                    "lineNo": 456,
+                    "lastLineNo": 462,
                     "params": [
                         {
                             "name": "text",
@@ -294,7 +313,8 @@
                 },
                 {
                     "name": "author",
-                    "lineNo": 457,
+                    "lineNo": 467,
+                    "lastLineNo": 480,
                     "params": [
                         {
                             "name": "text",
@@ -312,7 +332,8 @@
                 },
                 {
                     "name": "contributor",
-                    "lineNo": 475,
+                    "lineNo": 485,
+                    "lastLineNo": 492,
                     "params": [
                         {
                             "name": "text",
@@ -332,7 +353,8 @@
                 },
                 {
                     "name": "constructor",
-                    "lineNo": 487,
+                    "lineNo": 497,
+                    "lastLineNo": 502,
                     "params": [
                         {
                             "name": "text",
@@ -350,7 +372,8 @@
                 },
                 {
                     "name": "deprecated",
-                    "lineNo": 499,
+                    "lineNo": 509,
+                    "lastLineNo": 514,
                     "params": [
                         {
                             "name": "text",
@@ -368,7 +391,8 @@
                 },
                 {
                     "name": "module",
-                    "lineNo": 511,
+                    "lineNo": 521,
+                    "lastLineNo": 524,
                     "params": [
                         {
                             "name": "text",
@@ -386,7 +410,8 @@
                 },
                 {
                     "name": "fileoverview",
-                    "lineNo": 521,
+                    "lineNo": 531,
+                    "lastLineNo": 535,
                     "params": [
                         {
                             "name": "text",
@@ -405,8 +430,9 @@
                     "doc": ""
                 },
                 {
-                    "name": "type",
-                    "lineNo": 528,
+                    "name": "match",
+                    "lineNo": 538,
+                    "lastLineNo": 539,
                     "params": [],
                     "errors": [],
                     "throws": [],

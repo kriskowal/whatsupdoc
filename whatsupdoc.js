@@ -4,7 +4,7 @@
  * An API for parsing inline JavaScript documentation.
  * @author Kris Kowal (http://askawizard.blogspot.com)
  * <kris@cixar.com>
- * @license MIT License
+ * @license MIT
  * @module
  */
 
@@ -18,19 +18,23 @@ var expand = require("./expand").expand;
  * Creates a documentation tree for a module.
  * 
  * @param {String} text the text of a JavaScript program
- * @param {String} id optional module identifier
+ * @param {String} name optional module identifier
+ * @param {{tagParsers}} options provides optional hooks,
+ * presently just giving the ability to override the `tagParsers`.
  * @returns {{name, doc, children}} a tree of code point
  * documentation descriptors of the form `{name, type,
  * params, returns, throws, doc, errors, children, fileName,
  * lineNo}`
  */
-exports.parseModule = function (text, id) {
+exports.parseModule = function (text, name, options) {
     text = expand(text);
+    options = options || {};
+    var tagParsers = options.tagParsers;
     var comments = exports.comments(text);
     var markup = exports.guessMarkup(comments);
     var docs = exports.docs(comments);
-    var nodes = exports.parseDocs(docs, markup);
-    var tree = exports.tree(nodes, id);
+    var nodes = exports.parseDocs(docs, markup, tagParsers);
+    var tree = exports.tree(nodes, name);
     return tree;
 };
 
@@ -111,15 +115,17 @@ exports.comments = function (text, fileName, lineNo) {
                 comment = text.slice(2, nextBlockEnd);
                 text = text.slice(nextBlockEnd + 2);
             }
+            var firstLineNo = lineNo;
+            comment.replace(/\n/g, function () {
+                lineNo++;
+            });
             nodes.push({
                 "comment": comment,
                 "prefix": prefix,
                 "code": "",
                 "fileName": fileName,
-                "lineNo": lineNo
-            });
-            comment.replace(/\n/g, function () {
-                lineNo++;
+                "lineNo": firstLineNo,
+                "lastLineNo": lineNo
             });
         }
     } while (text.length);
@@ -184,7 +190,8 @@ exports.docs = function (nodes) {
             "doc": lines.join("\n"),
             "code": node.code,
             "fileName": node.fileName,
-            "lineNo": node.lineNo
+            "lineNo": node.lineNo,
+            "lastLineNo": node.lastLineNo
         });
     });
     return docs;
@@ -222,7 +229,7 @@ exports.guessMarkup = function (comments) {
  * @returns {Array} with `name`, `level`, `markup`, and the
  * properties added by {@link parseDoc}.
  */
-exports.parseDocs = function (docs, markup) {
+exports.parseDocs = function (docs, markup, tagParsers) {
     var n = 0;
     return docs.map(function (doc) {
         var node = {
@@ -230,12 +237,13 @@ exports.parseDocs = function (docs, markup) {
             "level": doc.level,
             "markup": markup,
             "fileName": doc.fileName,
-            "lineNo": doc.lineNo
+            "lineNo": doc.lineNo,
+            "lastLineNo": doc.lastLineNo
         };
         exports.parseDoc(
             doc.doc,
             node,
-            exports.tagParsers,
+            tagParsers,
             markup
         );
         return node;
@@ -249,11 +257,11 @@ exports.parseDocs = function (docs, markup) {
  * numbers are translated into `children` arrays.
  *
  * @param {Array * {level, ...}} nodes
- * @param {String} id optional module identifier
- * @returns {{"type": "module", "id": id, "children":
- * Array * ...}}
+ * @param {String} name optional module identifier
+ * @returns {{"type": "module", "name": name, "children":
+ * Array of ...}}
  */
-exports.tree = function (nodes, id) {
+exports.tree = function (nodes, name) {
     var root = {};
 
     if (nodes.length && nodes[0].module) {
@@ -261,7 +269,7 @@ exports.tree = function (nodes, id) {
         delete root.level;
     }
     root.type = 'module';
-    root.name = root.id = id;
+    root.name = name;
     root.children = [];
 
     var stack = [root.children];

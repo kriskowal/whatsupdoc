@@ -10,6 +10,9 @@
     "bin": {
         "wudoc": "whatsupdoc.js"
     },
+    "dependencies": {
+        "esprima": "*"
+    },
     "devDependencies": {
         "test": "0.4.3"
     }
