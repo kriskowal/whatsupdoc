@@ -3,15 +3,16 @@
     transforms tabs to an equivalent number of spaces.
 */
 // TODO special case for \r if it ever matters
-exports.expand = function (str, tabLength) {
+exports.expand = (str, tabLength) => {
     str = String(str);
     tabLength = tabLength || 4;
-    var output = [],
-        tabLf = /[\t\n]/g,
-        lastLastIndex = 0,
-        lastLfIndex = 0,
-        charsAddedThisLine = 0,
-        tabOffset, match;
+    var output = [];
+    var tabLf = /[\t\n]/g;
+    var lastLastIndex = 0;
+    var lastLfIndex = 0;
+    var charsAddedThisLine = 0;
+    var tabOffset;
+    var match;
     while (match = tabLf.exec(str)) {
         if (match[0] == "\t") {
             tabOffset = (
@@ -36,7 +37,5 @@ exports.expand = function (str, tabLength) {
     return output.join("") + str.slice(lastLastIndex);
 };
 
-var spaces = function (n) {
-    return Array(n + 1).join(" ");
-};
+var spaces = n => Array(n + 1).join(" ");
 

@@ -3,7 +3,7 @@ var ASSERT = require("assert");
 var UTIL = require("util");
 var PARSERS = require("whatsupdoc/parsers");
 
-exports.testParseCurly = function () {
+exports.testParseCurly = () => {
     UTIL.forEachApply([
         ["{test}", ["test", ""]],
         ["{{test}}", ["{test}", ""]],
@@ -14,7 +14,7 @@ exports.testParseCurly = function () {
         ["{ test } x", [" test ", " x"]],
         ["{ {test} } x", [" {test} ", " x"]],
         ["{ {test} { test }} x", [" {test} { test }", " x"]]
-    ], function (input, output) {
+    ], (input, output) => {
         ASSERT.deepEqual(PARSERS.parseCurly(input), output);
     });
 };
