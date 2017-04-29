@@ -7,7 +7,7 @@
  * parses a template and returns its syntax tree
  * using {@link nodes} and {@link tree}.
  */
-exports.parse = function (text, fileName, lineNo) {
+exports.parse = (text, fileName, lineNo) => {
     var nodes = exports.nodes(text, fileName, lineNo);
     var tree = exports.tree(nodes, fileName);
     return tree;
@@ -15,7 +15,7 @@ exports.parse = function (text, fileName, lineNo) {
 
 /** constructs a flat list of inline and block nodes with
  * interpolated text based on the text of a template */
-exports.nodes = function (text, fileName, lineNo) {
+exports.nodes = (text, fileName, lineNo) => {
     var nodes = [];
     var node = {errors:[]};
     var lineNo = lineNo || 1;
@@ -26,7 +26,7 @@ exports.nodes = function (text, fileName, lineNo) {
             text = "";
         } else {
             var prefix = text.slice(0, nextOpen);
-            prefix.replace(/\n/g, function () {
+            prefix.replace(/\n/g, () => {
                 lineNo++;
             });
             var lastLf = prefix.lastIndexOf("\n");
@@ -57,7 +57,7 @@ exports.nodes = function (text, fileName, lineNo) {
 
 /** transforms a flat list of interpolated text and inline
  * and block nodes and constructs a syntax tree. */
-exports.tree = function (nodes, fileName) {
+exports.tree = (nodes, fileName) => {
     var root = {
         "type": "block",
         "content": "root",
@@ -67,7 +67,7 @@ exports.tree = function (nodes, fileName) {
         "children": []
     };
     var stack = [root];
-    nodes.forEach(function (node) {
+    nodes.forEach(node => {
         if (typeof node === "string") {
             stack[stack.length - 1].children.push(node);
         } else {
@@ -117,7 +117,7 @@ exports.tree = function (nodes, fileName) {
  * `String` that may contain nested curly braces, and
  * remainder is all text that followed.
  */
-exports.parseCurly = function (text, node) {
+exports.parseCurly = (text, node) => {
     if (!text.slice(0, 1) == "{")
         throw new Error("Assertion failed: parseCurly must receive a string that starts with a curly brace.");
     text = text.slice(1);
@@ -136,7 +136,7 @@ exports.parseCurly = function (text, node) {
 /**
  */
 // already found {, looking for }, might find { } inside
-exports.parseCurlyScan = function (text, node) {
+exports.parseCurlyScan = (text, node) => {
     var nextOpen = text.indexOf("{");
     var nextClose = text.indexOf("}");
     if (nextClose < 0) {

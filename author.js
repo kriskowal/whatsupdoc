@@ -19,9 +19,7 @@ exports.Author.prototype.toString = function () {
         this.name,
         this.url ? "(" + this.url + ")" : undefined,
         this.email ? "<" + this.email + ">" : undefined
-    ].filter(function (part) {
-        return !!part;
-    }).join(' ');
+    ].filter(part => !!part).join(' ');
 };
 
 exports.Author.regexp = new RegExp(

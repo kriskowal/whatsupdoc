@@ -24,7 +24,7 @@ var expand = require("./expand").expand;
  * params, returns, throws, doc, errors, children, fileName,
  * lineNo}`
  */
-exports.parseModule = function (text, id) {
+exports.parseModule = (text, id) => {
     text = expand(text);
     var comments = exports.comments(text);
     var markup = exports.guessMarkup(comments);
@@ -53,7 +53,7 @@ exports.parseModule = function (text, id) {
  * lineNo}}
  */
 // XXX known issue: does not find quoted or slashed sections
-exports.comments = function (text, fileName, lineNo) {
+exports.comments = (text, fileName, lineNo) => {
     lineNo = lineNo || 1;
     var nodes = [];
     do {
@@ -71,7 +71,7 @@ exports.comments = function (text, fileName, lineNo) {
             // inline
             if (nodes.length)
                 nodes[nodes.length - 1].code += text.slice(0, nextInline);
-            text.slice(0, nextInline).replace(/\n/g, function () {
+            text.slice(0, nextInline).replace(/\n/g, () => {
                 lineNo++;
             });
             text = text.slice(nextInline);
@@ -87,7 +87,7 @@ exports.comments = function (text, fileName, lineNo) {
         } else {
             // block
             var prefix = text.slice(0, nextBlock);
-            prefix.replace(/\n/g, function () {
+            prefix.replace(/\n/g, () => {
                 lineNo++;
                 return "\n";
             });
@@ -118,7 +118,7 @@ exports.comments = function (text, fileName, lineNo) {
                 "fileName": fileName,
                 "lineNo": lineNo
             });
-            comment.replace(/\n/g, function () {
+            comment.replace(/\n/g, () => {
                 lineNo++;
             });
         }
@@ -147,9 +147,9 @@ exports.comments = function (text, fileName, lineNo) {
  * @returns {Array * {doc, code, name, level, fileName,
  * lineNo}} nodes
  */
-exports.docs = function (nodes) {
+exports.docs = nodes => {
     var docs = [];
-    nodes.forEach(function (node) {
+    nodes.forEach(node => {
         var comment = node.comment;
         var lines = comment.split(/\r?\n/);
         var firstLine = lines.shift();
@@ -163,7 +163,7 @@ exports.docs = function (nodes) {
                 starPrefix +
             ")" + "(.*)$"
         );
-        lines = lines.map(function (line) {
+        lines = lines.map(line => {
             if (!line.trim().length)
                 return "";
             if (!expression.test(line))
@@ -195,9 +195,9 @@ exports.docs = function (nodes) {
  * `comments` method and returns a markup language module
  * name.  The default is `undefined`.
  */
-exports.guessMarkup = function (comments) {
+exports.guessMarkup = comments => {
     var markup;
-    comments.forEach(function (node) {
+    comments.forEach(node => {
         var match = /^markup\s+(\S+)\s*$/.exec(node.comment);
         if (match)
             markup = match[1];
@@ -222,9 +222,9 @@ exports.guessMarkup = function (comments) {
  * @returns {Array} with `name`, `level`, `markup`, and the
  * properties added by {@link parseDoc}.
  */
-exports.parseDocs = function (docs, markup) {
+exports.parseDocs = (docs, markup) => {
     var n = 0;
-    return docs.map(function (doc) {
+    return docs.map(doc => {
         var node = {
             "name": exports.guessName(doc.code) || String(n++),
             "level": doc.level,
@@ -253,7 +253,7 @@ exports.parseDocs = function (docs, markup) {
  * @returns {{"type": "module", "id": id, "children":
  * Array * ...}}
  */
-exports.tree = function (nodes, id) {
+exports.tree = (nodes, id) => {
     var root = {};
 
     if (nodes.length && nodes[0].module) {
@@ -266,7 +266,7 @@ exports.tree = function (nodes, id) {
 
     var stack = [root.children];
     var level = 0;
-    nodes.forEach(function (node) {
+    nodes.forEach(node => {
         while (node.level > stack.length - 1) {
             var top = stack[stack.length - 1];
             var last;
@@ -294,7 +294,7 @@ exports.tree = function (nodes, id) {
  * name can be found.
  */
 var guessRe = /(\w+)\s*=|["']([^'"]+)["']\s*:/;
-exports.guessName = function (code) {
+exports.guessName = code => {
     var match = guessRe.exec(code);
     if (match)
         return match[1] || match[2];
@@ -314,7 +314,7 @@ exports.guessName = function (code) {
  * exported by the same module.
  * @returns node
  */
-exports.parseDoc = function (text, node, tagParsers) {
+exports.parseDoc = (text, node, tagParsers) => {
     node = node || {};
     tagParsers = tagParsers || exports.tagParsers;
 
@@ -324,10 +324,10 @@ exports.parseDoc = function (text, node, tagParsers) {
     node['throws'] = [];
     node.see = [];
     var blocks = text.replace(/\n@/g, "\n\n\n@").split(/\n\n+/g);
-    blocks.forEach(function (block) {
+    blocks.forEach(block => {
         if (/^@/.test(block)) {
             var blocks = block.slice(1).split(/\n@/);
-            blocks.forEach(function (block) {
+            blocks.forEach(block => {
                 var match = /^(\S+)(?:\s+([\s\S]*))?/.exec(block);
                 var tag = match[1];
                 var text = (match[2] || "").split(/\n/g).join(" ");
@@ -367,7 +367,7 @@ var tagParsers = exports.tagParsers = {};
  * @param {String} text
  * @param {{errors Array}} node
  */
-tagParsers.param = function (text, node) {
+tagParsers.param = (text, node) => {
     if (/^{/.test(text)) {
         var match = PARSE.parseCurly(text, node);
         var type = match[0];
@@ -395,7 +395,7 @@ tagParsers.param = function (text, node) {
  * @param {String} text
  * @param {{errors Array}} node
  */
-tagParsers.params = function (text, node) {
+tagParsers.params = (text, node) => {
     if (/^{/.test(text)) {
         var match = PARSE.parseCurly(text, node);
         var type = match[0];
@@ -423,7 +423,7 @@ tagParsers.params = function (text, node) {
  * @param {String} text
  * @param {{errors Array}} node
  */
-tagParsers.returns = function (text, node) {
+tagParsers.returns = (text, node) => {
     // TODO parse the text into an object
     if (/^{/.test(text)) {
         var match = PARSE.parseCurly(text, node);
@@ -452,7 +452,7 @@ tagParsers["return"] = tagParsers.returns;
  * @param {String} text
  * @param {{errors Array}} node
  */
-tagParsers.name = function (text, node) {
+tagParsers.name = (text, node) => {
     node.name = text.trim();
 };
 
@@ -470,7 +470,7 @@ tagParsers.name = function (text, node) {
  * @param {String} text
  * @param {{errors Array}} node
  */
-tagParsers.author = function (text, node) {
+tagParsers.author = (text, node) => {
     node.author = new Author(text);
 };
 
@@ -482,7 +482,7 @@ tagParsers.author = function (text, node) {
  * @param {String} text
  * @param {{errors Array}} node
  */
-tagParsers.contributor = function (text, node) {
+tagParsers.contributor = (text, node) => {
     node.contributors.push(new Author(text));
 };
 
@@ -492,7 +492,7 @@ tagParsers.contributor = function (text, node) {
  * @param {String} text
  * @param {{errors Array}} node
  */
-tagParsers.constructor = function (text, node) {
+tagParsers.constructor = (text, node) => {
     if (text.trim().length)
         node.errors.push("`@constructor` tag had superfluous text");
     node.constructor = true;
@@ -504,7 +504,7 @@ tagParsers.constructor = function (text, node) {
  * @param {String} text
  * @param {{errors Array}} node
  */
-tagParsers.deprecated = function (text, node) {
+tagParsers.deprecated = (text, node) => {
     if (text.trim().length)
         node.errors.push("`@deprecated` tag had superfluous text");
     node.deprecated = true;
@@ -514,7 +514,7 @@ tagParsers.deprecated = function (text, node) {
  * @param {String} text
  * @param {{errors Array}} node
  */
-tagParsers.module = function (text, node) {
+tagParsers.module = (text, node) => {
     if (text.trim().length)
         node.errors.push("`@module` tag had superfluous text");
     node.module = true;
@@ -529,7 +529,7 @@ tagParsers.fileoverview = tagParsers.module;
 
 /***
  */
-tagParsers['throws'] = function (text, node) {
+tagParsers['throws'] = (text, node) => {
     if (/^{/.test(text)) {
         var match = PARSE.parseCurly(text, node);
         var type = match[0];
@@ -570,9 +570,7 @@ tagParsers['throws'] = function (text, node) {
    @set
 */
 
-var spaces = function (n) {
-    return Array(n + 1).join(" ");
-};
+var spaces = n => Array(n + 1).join(" ");
 
 if (require.main == module) {
     // node side only, not in browser. use parens to prevent
